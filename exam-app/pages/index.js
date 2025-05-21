@@ -31,9 +31,9 @@ export default function HomePage({ years }) {
 
 export async function getServerSideProps() {
   const result = await query(`
-    SELECT DISTINCT exam_year
-    FROM questions
-    ORDER BY exam_year ASC
+    SELECT DISTINCT year
+    FROM exams
+    ORDER BY year ASC
   `)
 
   const years = result.map(row => row.exam_year)

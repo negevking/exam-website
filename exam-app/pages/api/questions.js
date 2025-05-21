@@ -5,10 +5,11 @@ export default async function handler(req, res) {
   const { year, number } = req.query
 
   const q = await query(`
-    SELECT q.id, q.question_text, q.question_number, a.answer_text, a.display_order
+    SELECT q.id, q.text, q.question_number, a.answer_text, a.display_order
     FROM questions q
     JOIN answers a ON q.id = a.question_id
-    WHERE q.exam_year = $1 AND q.question_number = $2
+    JOIN exams e ON q.exam_id = e.id
+    WHERE e.year = $1 AND q.question_number = $2
     ORDER BY a.display_order ASC
   `, [year, number])
 
