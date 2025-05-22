@@ -33,13 +33,13 @@ export default function HomePage({ exams }) {
                 <div key={year.year} className={styles.yearBlock}>
                   <div className={styles.yearLabel}>{year.year}</div>
                   <div className={styles.partsRow}>
-                    {year.sections.map((section) => (
+                    {year.sections.map((sectionObj) => (
                       <button
-                        key={section}
+                        key={sectionObj.section}
                         className={styles.partBtn}
-                        onClick={() => router.push(`/questions/${exam.subject}/${year.year}/${section}`)}
+                        onClick={() => router.push(`/exams/${sectionObj.display_code}`)}
                       >
-                        {section}
+                        {sectionObj.section}
                       </button>
                     ))}
                   </div>
@@ -54,25 +54,27 @@ export default function HomePage({ exams }) {
 }
 
 export async function getServerSideProps() {
-  // Updated query and mapping for new keys
+  // Fetch all exams
   const examsRaw = await query(`
-    SELECT subject, year, section
+    SELECT subject, year, section, display_code
     FROM exams
     ORDER BY subject, year, section
   `)
 
-  // Transform to nested structure: [{subject, years:[{year, sections:[]}, ...]}, ...]
+  // Build a nested structure and preserve display_code for each section
   const examsMap = {}
-  examsRaw.forEach(({ subject, year, section }) => {
+  examsRaw.forEach(({ subject, year, section, display_code }) => {
     if (!examsMap[subject]) examsMap[subject] = {}
     if (!examsMap[subject][year]) examsMap[subject][year] = []
-    if (!examsMap[subject][year].includes(section)) examsMap[subject][year].push(section)
+    // Store both section and display_code for each section
+    examsMap[subject][year].push({ section, display_code })
   })
+
   const exams = Object.entries(examsMap).map(([subject, yearsObj]) => ({
     subject,
-    years: Object.entries(yearsObj).map(([year, sections]) => ({
+    years: Object.entries(yearsObj).map(([year, sectionsArr]) => ({
       year,
-      sections
+      sections: sectionsArr // array of { section, display_code }
     }))
   }))
 
