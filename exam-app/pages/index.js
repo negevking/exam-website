@@ -37,7 +37,7 @@ export default function HomePage({ exams }) {
                       <button
                         key={sectionObj.section}
                         className={styles.partBtn}
-                        onClick={() => router.push(`/exams/${sectionObj.display_code}`)}
+                        onClick={() => router.push(`/${sectionObj.display_code}/info`)}
                       >
                         {sectionObj.section}
                       </button>
