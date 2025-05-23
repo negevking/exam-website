@@ -1,5 +1,25 @@
 import { query } from '../../lib/db'
 
+function evaluateResponses(responses) {
+  const correct = responses.filter(r => r.is_correct).length;
+
+  const incorrect_questions = responses
+    .filter(r => !r.is_correct)
+    .map(r => ({
+      question_id: r.question_id,
+      question_number: r.question_number
+    }));
+
+  const correct_questions = responses
+    .filter(r => r.is_correct)
+    .map(r => ({
+      question_id: r.question_id,
+      question_number: r.question_number
+    }));
+
+  return { correct, incorrect_questions, correct_questions };
+}
+
 export default async function handler(req, res) {
   const { method, query: queryParams, body } = req
 
@@ -40,24 +60,17 @@ export default async function handler(req, res) {
     const { session_id } = queryParams
     
     const result = await query(responseQuery, [session_id]);
-
-    const correct = result.filter(r => r.is_correct).length
     const total = result.length
-    const incorrect_questions = result
-      .filter(r => !r.is_correct)
-      .map(r => ({
-        question_id: r.question_id,
-        question_number: r.question_number
-      }))
 
-    return res.status(200).json({ correct, total, incorrect_questions })
+    const { correct, incorrect_questions, correct_questions } = evaluateResponses(result);
+    return res.status(200).json({ correct, total, incorrect_questions, correct_questions })
   }
 
   // exam mode: questions are scored based on number of questions in the exam, a
   if (method === 'GET' && queryParams.session_id && queryParams.exam_id) {
     const session_id = queryParams.session_id;
     const exam_id = queryParams.exam_id;
-    console.log('exam_id', exam_id);
+    
     // Count query: count total questions for the exam
     const countQuery = `SELECT COUNT(*) FROM questions WHERE exam_id = $1`;
 
@@ -65,20 +78,11 @@ export default async function handler(req, res) {
       // Run both queries separately
       const responseResult = await query(responseQuery, [session_id]);
       const countResult = await query(countQuery, [exam_id]);
-      console.log('countResult:', countResult);
-      // Count total questions (count comes as a string, convert to number)
+      
       const total = parseInt(countResult[0].count, 10);
-      console.log('total:', total);
-      // Filter responses for correct/incorrect
-      const correct = responseResult.filter(r => r.is_correct).length;
-      const incorrect_questions = responseResult
-        .filter(r => !r.is_correct)
-        .map(r => ({
-          question_id: r.question_id,
-          question_number: r.question_number,
-        }));
+      const { correct, incorrect_questions, correct_questions } = evaluateResponses(responseResult);
 
-      return res.status(200).json({ correct, total, incorrect_questions });
+      return res.status(200).json({ correct, total, incorrect_questions, correct_questions });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ error: 'Internal server error' });

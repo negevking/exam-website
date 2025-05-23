@@ -42,23 +42,6 @@ export default function ExamSimulator({ questions, exam }) {
     setChecked(false) // reset check state
   }
 
-//   async function saveResponse(questionId, answerId) {
-//     await fetch('/api/responses', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({
-//         session_id: sessionIdRef.current,
-//         question_id: questionId,
-//         answer_id: answerId
-//       })
-//     })
-//   }
-
-//   async function handleSaveCurrentResponse() {
-//     const qid = questions[currentIndex].id
-//     const aid = responses[qid]
-//     if (aid) await saveResponse(qid, aid)
-// }
 async function saveResponse() {
   const qid = questions[currentIndex].id
   const aid = responses[qid]
@@ -133,6 +116,13 @@ async function saveResponse() {
                 {score.incorrect_questions.map(q => (
                     <li key={q.question_id} className={styles.incorrect}>
                     Question {q.question_number}: incorrect
+                    </li>
+                ))}
+                </ul>
+                <ul className={styles.choices}>
+                {score.correct_questions.map(q => (
+                    <li key={q.question_id} className={styles.correct}>
+                    Question {q.question_number}: correct
                     </li>
                 ))}
                 </ul>
