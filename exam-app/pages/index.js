@@ -1,42 +1,82 @@
 // File: pages/index.js
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import theme from '../styles/theme'
+import styles from '../styles/Home.module.css'
 import { query } from '../lib/db'
 
-export default function HomePage({ years }) {
+export default function HomePage({ exams }) {
   const router = useRouter()
 
-  const handleSelect = (year) => {
-    router.push(`/questions/${year}`)
-  }
+  useEffect(() => {
+    theme.forEach((color, idx) => {
+      document.documentElement.style.setProperty(`--color${idx + 1}`, color)
+    })
+  }, [])
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">Cambridge Engineering Exam Practice</h1>
-      <p className="mb-4 text-gray-700">Choose a paper to begin:</p>
-
-      <div className="grid grid-cols-2 gap-4">
-        {years.map((year) => (
-          <button
-            key={year}
-            onClick={() => handleSelect(year)}
-            className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700"
-          >
-            ENGAA {year}
-          </button>
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <h1>
+          <span className={styles.bold}>Welcome to <u>exam prep</u></span>
+        </h1>
+        <button className={styles.loginBtn} onClick={() => router.push('/login')}>
+          login/signup
+        </button>
+      </header>
+      <main className={styles.main}>
+        {exams.map((exam) => (
+          <section key={exam.subject} className={styles.examBox}>
+            <div className={styles.examTitle}>{exam.subject}</div>
+            <div className={styles.examContent}>
+              {exam.years.map((year) => (
+                <div key={year.year} className={styles.yearBlock}>
+                  <div className={styles.yearLabel}>{year.year}</div>
+                  <div className={styles.partsRow}>
+                    {year.sections.map((sectionObj) => (
+                      <button
+                        key={sectionObj.section}
+                        className={styles.partBtn}
+                        onClick={() => router.push(`/${sectionObj.display_code}/info`)}
+                      >
+                        {sectionObj.section}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
         ))}
-      </div>
+      </main>
     </div>
   )
 }
 
 export async function getServerSideProps() {
-  const result = await query(`
-    SELECT DISTINCT year
+  // Fetch all exams
+  const examsRaw = await query(`
+    SELECT subject, year, section, display_code
     FROM exams
-    ORDER BY year ASC
+    ORDER BY subject, year, section
   `)
 
-  const years = result.map(row => row.exam_year)
+  // Build a nested structure and preserve display_code for each section
+  const examsMap = {}
+  examsRaw.forEach(({ subject, year, section, display_code }) => {
+    if (!examsMap[subject]) examsMap[subject] = {}
+    if (!examsMap[subject][year]) examsMap[subject][year] = []
+    // Store both section and display_code for each section
+    examsMap[subject][year].push({ section, display_code })
+  })
 
-  return { props: { years } }
+  const exams = Object.entries(examsMap).map(([subject, yearsObj]) => ({
+    subject,
+    years: Object.entries(yearsObj).map(([year, sectionsArr]) => ({
+      year,
+      sections: sectionsArr // array of { section, display_code }
+    }))
+  }))
+
+  return { props: { exams } }
 }
