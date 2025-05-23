@@ -24,7 +24,7 @@ export default function PaperInfoPage({ exam }) {
                 <p>You will answer all questions under timed conditions, with no feedback until the end. Perfect for simulating real test conditions.</p>
                 <button
                   className={styles.partBtn}
-                  onClick={() => router.push(`/{display_code}/exam`)}
+                  onClick={() => router.push(`/${display_code}/exam`)}
                 >
                   Start Exam Mode
                 </button>
@@ -37,7 +37,7 @@ export default function PaperInfoPage({ exam }) {
                 <p>Practice each question at your own pace, with optional hints, worked solutions, and the ability to check or retry questions.</p>
                 <button
                   className={styles.partBtn}
-                  onClick={() => router.push(`/{display_code}/practice`)}
+                  onClick={() => router.push(`/${display_code}/practice`)}
                 >
                   Start Practice Mode
                 </button>
