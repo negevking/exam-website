@@ -1,3 +1,5 @@
+// TO DO: create submissions table which includes type of exam, score and time taken
+// implement updating this table into the submit/score handler/method
 import { query } from '../../lib/db'
 
 function evaluateResponses(responses) {
@@ -70,7 +72,8 @@ export default async function handler(req, res) {
   if (method === 'GET' && queryParams.session_id && queryParams.exam_id) {
     const session_id = queryParams.session_id;
     const exam_id = queryParams.exam_id;
-    
+    const time_taken = queryParams.time_taken
+
     // Count query: count total questions for the exam
     const countQuery = `SELECT COUNT(*) FROM questions WHERE exam_id = $1`;
 
