@@ -85,7 +85,7 @@ export default async function handler(req, res) {
       const total = parseInt(countResult[0].count, 10);
       const { correct, incorrect_questions, correct_questions } = evaluateResponses(responseResult);
 
-      return res.status(200).json({ correct, total, incorrect_questions, correct_questions });
+      return res.status(200).json({ correct, total, incorrect_questions, correct_questions, time_taken });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ error: 'Internal server error' });

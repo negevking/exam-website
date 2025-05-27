@@ -37,7 +37,7 @@ export default function PaperInfoPage({ exam }) {
                 <p>Practice each question at your own pace, with optional hints, worked solutions, and the ability to check or retry questions.</p>
                 <button
                   className={styles.partBtn}
-                  onClick={() => router.push(`/${display_code}/practice`)}
+                  onClick={() => router.push(`/${display_code}/exam?mode=practice`)}
                 >
                   Start Practice Mode
                 </button>

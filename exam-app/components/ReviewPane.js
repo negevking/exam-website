@@ -3,10 +3,16 @@ import { useState } from 'react'
 import QuestionViewer from './QuestionViewer'
 import styles from '../styles/Exam.module.css'
 
+function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+}
+
 export default function ReviewPane({
   exam,
   score,
-  timeTaken,
+  //timeTaken,
   questions,
   responses,
   reviewIndex,
@@ -29,6 +35,8 @@ export default function ReviewPane({
   }
 
   const [showIncorrectOnly, setShowIncorrectOnly] = useState(false)
+
+  const timeTaken = formatTime(score.time_taken)
 
   const questionList = showIncorrectOnly
     ? score.incorrect_questions

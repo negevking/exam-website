@@ -7,9 +7,10 @@ import { v4 as uuidv4 } from 'uuid'
 import QuestionViewer from '../../components/QuestionViewer'
 import ReviewPane from '../../components/ReviewPane'
 
-
 export default function ExamSimulator({ questions, exam }) {
   const router = useRouter()
+  const mode = router.query.mode || 'exam'
+  const isPractice = mode === 'practice'
   const [currentIndex, setCurrentIndex] = useState(0)
   const [responses, setResponses] = useState({})
   const [submitted, setSubmitted] = useState(false)
@@ -19,10 +20,16 @@ export default function ExamSimulator({ questions, exam }) {
   const [reviewMode, setReviewMode] = useState(false)
   const [reviewIndex, setReviewIndex] = useState(null)
   const sessionIdRef = useRef(uuidv4())
+  const [elapsedTime, setElapsedTime] = useState(0)
   const [timeLeft, setTimeLeft] = useState(exam.time_limit * 60)
   const timerRef = useRef()
 
-  useEffect(() => {
+useEffect(() => {
+  if (isPractice) {
+    timerRef.current = setInterval(() => {
+      setElapsedTime(prev => prev + 1)
+    }, 1000)
+  } else {
     timerRef.current = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -33,9 +40,10 @@ export default function ExamSimulator({ questions, exam }) {
         return prev - 1
       })
     }, 1000)
-    return () => clearInterval(timerRef.current)
-  }, [])
+  }
 
+  return () => clearInterval(timerRef.current)
+}, [isPractice])
   const currentQuestion = reviewMode
     ? questions[reviewIndex]
     : questions[currentIndex]
@@ -65,10 +73,10 @@ export default function ExamSimulator({ questions, exam }) {
   }
 
   async function handleSubmitExam() {
-    const time_taken = exam.time_limit * 60 - timeLeft
+    const timeTaken = isPractice ? elapsedTime : exam.time_limit * 60 - timeLeft
     clearInterval(timerRef.current)
     setSubmitted(true)
-    const res = await fetch(`/api/responses?session_id=${sessionIdRef.current}&exam_id=${exam.id}&time_taken=${time_taken}`)
+    const res = await fetch(`/api/responses?session_id=${sessionIdRef.current}&exam_id=${exam.id}&time_taken=${timeTaken}`)
     const data = await res.json()
     setScore(data)
     handleStartReview(0)
@@ -90,10 +98,14 @@ export default function ExamSimulator({ questions, exam }) {
   return (
     <div className={styles.container}>
       {!submitted && (
-        <div className={styles.timer}>
-          Time remaining: <strong>{formatTime(timeLeft)}</strong>
-        </div>
-      )}
+      <div className={styles.timer}>
+        {isPractice ? (
+          <>Time elapsed: <strong>{formatTime(elapsedTime)}</strong></>
+        ) : (
+          <>Time remaining: <strong>{formatTime(timeLeft)}</strong></>
+        )}
+      </div>
+    )}
 
       {!submitted ? (
         <QuestionViewer
@@ -120,8 +132,8 @@ export default function ExamSimulator({ questions, exam }) {
           totalQuestions={questions.length}
           disablePrevious={currentIndex === 0}
           isLast={currentIndex === questions.length - 1}
-          showCheck={false}
-          showReveal={false}
+          showCheck={isPractice}
+          showReveal={isPractice}
           onCheck={() => setChecked(true)}
           onReveal={() => setShowCorrect(prev => !prev)}
           isChecked={checked}
@@ -132,7 +144,7 @@ export default function ExamSimulator({ questions, exam }) {
         <ReviewPane
           exam={exam}
           score={score}
-          timeTaken={formatTime(exam.time_limit * 60 - timeLeft)}
+          //timeTaken={formatTime(timeTaken)}
           questions={questions}
           responses={responses}
           reviewIndex={reviewIndex}
