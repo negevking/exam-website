@@ -1,0 +1,57 @@
+.container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--color5);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+.tag {
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    border: 2px solid var(--color1);
+    background: var(--color5);
+    color: var(--color1);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.tag.selected {
+    background: var(--color1);
+    color: var(--color5);
+}
+.settings {
+    margin-bottom: 1rem;
+}
+.startBtn {
+    padding: 0.6rem 1.5rem;
+    background: var(--color1);
+    color: var(--color5);
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.startBtn:hover {
+    background: var(--color2);
+}
+.selectAllBtn {
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background-color: var(--color1);      /* primary button background */
+  color: var(--color5);                 /* text color for contrast */
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.selectAllBtn:hover {
+  background-color: var(--color2);     /* hover background, secondary color */
+}
