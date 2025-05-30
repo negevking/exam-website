@@ -20,9 +20,6 @@ export default function HomePage({ exams }) {
         <h1>
           <span className={styles.bold}>Welcome to <u>exam prep</u></span>
         </h1>
-        <button className={styles.loginBtn} onClick={() => router.push('/login')}>
-          login/signup
-        </button>
       </header>
       <main className={styles.main}>
         {exams.map((exam) => (
@@ -48,6 +45,9 @@ export default function HomePage({ exams }) {
             </div>
           </section>
         ))}
+        <button className={styles.loginBtn} onClick={() => router.push('/practice')}>
+          Attempt questions sorted by topic
+        </button>
       </main>
     </div>
   )

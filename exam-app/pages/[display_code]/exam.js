@@ -144,7 +144,6 @@ useEffect(() => {
         <ReviewPane
           exam={exam}
           score={score}
-          //timeTaken={formatTime(timeTaken)}
           questions={questions}
           responses={responses}
           reviewIndex={reviewIndex}
