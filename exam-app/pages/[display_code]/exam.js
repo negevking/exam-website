@@ -192,7 +192,7 @@ export async function getServerSideProps({ params }) {
     grouped[row.id].choices.push({
       id: row.answer_id,
       text: row.answer_text,
-      label: String.fromCharCode(64 + row.display_order),
+      label: String.fromCharCode(65 + row.display_order),
       is_correct: row.is_correct
     })
   }
