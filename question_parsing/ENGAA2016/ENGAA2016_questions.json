@@ -1,0 +1,72 @@
+[
+  {
+    "q_number": "1",
+    "q_text": "Find the complete set of solutions to $-8<6-\\frac{x}{2}$",
+    "diagram_url": null
+  },
+  {
+    "q_number": "2",
+    "q_text": "A nuclide ${ }_{82}^{214} \\mathrm{~Pb}$ changes by radioactive decay into the nuclide ${ }_{82}^{210} \\mathrm{~Pb}$. Which combination of emissions produces this change?",
+    "diagram_url": null
+  },
+  {
+    "q_number": "3",
+    "q_text": "Which one of the following is a simplification of $(\\sqrt{3}-\\sqrt{2})^{2}$ ?",
+    "diagram_url": null
+  },
+  {
+    "q_number": "4",
+    "q_text": "The graph shown of quantity $y$ against quantity $x$ represents the motion of a body.\n (The scales on both axes are in the appropriate S.I. units, and the gravitational field strength $g$ is $10 \\mathrm{~N} \\mathrm{~kg}^{-1}$.)\n Which two of the following could the graph represent?\n 1 kinetic energy against velocity for an object of mass 10 kg undergoing free-fall\n 2 potential energy against height for an object of mass 20 kg being lifted by a constant external force\n 3 velocity against time for an object of mass 20 kg being accelerated by a resultant force of 100 N\n 4 work done by an external force of 5 N against distance moved for an object of mass 12 kg being moved at constant speed by (and in the direction of) the external force",
+    "diagram_url": "https://cdn.mathpix.com/cropped/2025_05_29_46a428cd4835e3edf35cg-06.jpg?height=532&width=686&top_left_y=305&top_left_x=742"
+  },
+  {
+    "q_number": "5",
+    "q_text": "The ratio of $Q: R$ is $5: 2$ and the ratio of $R: S$ is $3: 10$\n Which one of the following gives the ratio $\\mathrm{Q}: \\mathrm{S}$ in its simplest form?",
+    "diagram_url": null
+  },
+  {
+    "q_number": "6",
+    "q_text": "A uranium-235 nucleus can undergo fission to produce two smaller nuclei.\n Which of the diagrams, if any, could represent this process?",
+    "diagram_url": "https://cdn.mathpix.com/cropped/2025_05_29_46a428cd4835e3edf35cg-08.jpg?height=862&width=1277&top_left_y=391&top_left_x=268"
+  },
+  {
+    "q_number": "7",
+    "q_text": "The mean age of the twenty members of a running club is exactly 28.\n The mean age increases by exactly 2 years when two new members join.\n What is the mean age of the two new members?",
+    "diagram_url": null
+  },
+  {
+    "q_number": "8",
+    "q_text": "A circuit consists of a $5.0 \\Omega$ resistor and a variable resistor connected in series with a 24 V battery. The variable resistor has a minimum resistance of $3.0 \\Omega$ and a maximum resistance of $15 \\Omega$. The battery and the connecting wires have negligible resistance.\n What is the maximum power dissipated in the $5.0 \\Omega$ resistor?",
+    "diagram_url": null
+  },
+  {
+    "q_number": "9",
+    "q_text": "A medical scanner is bought for $£ 15000$.\n The value of the scanner depreciates by $20 \\%$ every year.\n By how much has the scanner reduced in value after 2 years?",
+    "diagram_url": null
+  },
+  {
+    "q_number": "10",
+    "q_text": "The total power $P$ radiated by a star is given by:\n $$\n P=k R^{2} T^{4}\n $$\n where $R$ is the radius of the star, $T$ is its surface temperature and $k$ is a constant.\n The power currently radiated by the Sun is $4.0 \\times 10^{26} \\mathrm{~W}$. Towards the end of the Sun's life its radius will increase by a factor of a hundred and its surface temperature will decrease by a factor of two.\n What will be the power radiated by the Sun when these changes have occurred?",
+    "diagram_url": null
+  },
+  {
+    "q_number": "11",
+    "q_text": "The point $A$ is 4 km due East of the point $B$.\n The bearing of the point C from A is $330^{\\circ}$ and the bearing of C from B is $060^{\\circ}$\n Find the distance $B C$.",
+    "diagram_url": null
+  },
+  {
+    "q_number": "12",
+    "q_text": "A transverse wave travelling through a medium has a frequency of 5.0 Hz , a wavelength of 4.0 cm and an amplitude of 3.0 cm .\n What is the total distance travelled by a particle of the medium in one minute?",
+    "diagram_url": null
+  },
+  {
+    "q_number": "13",
+    "q_text": "The quantities $x$ and $y$ are positive.\n $x$ is inversely proportional to the square root of $y$.\n When $x=8, y=9$.\n What is the value of $y$ when $x=6$ ?",
+    "diagram_url": null
+  },
+  {
+    "q_number": "14",
+    "q_text": "A motor is used to lift a mass of 5.0 kg using a pulley system as shown in the diagram. The pulley is secured to the roof using a coupling.\n The motor needs to cause the mass to accelerate upwards at $0.80 \\mathrm{~ms}^{-2}$.\n What is the minimum tension force that the coupling must be able to withstand without breaking?\n (The gravitational field strength $g$ is $10 \\mathrm{~N} \\mathrm{~kg}^{-1}$. The pulley system is frictionless and has negligible mass. The rope has negligible mass and is inextensible.)",
+    "diagram_url": "https://cdn.mathpix.com/cropped/2025_05_29_46a428cd4835e3edf35cg-13.jpg?height=732&width=889&top_left_y=345&top_left_x=626"
+  }
+]
