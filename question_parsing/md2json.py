@@ -20,25 +20,35 @@ else:
     raise ValueError('File name does not match expected format.')
 
 
-def md_to_custom_html(md_text):
+def md_to_custom_html(md_text, question_text=False):
     # 1. Replace inline math $...$ with \[ ... \]
     #    This assumes simple cases and not nested/multi-line math.
     #    Also replaces multiple occurrences.
-    def replace_math(match):
+    def replace_inline_math(match):
         content = match.group(1)
         return f"\\({content}\\)"
+    def replace_block_math(match):
+        content = match.group(1)
+        return f"\\[{content}\\]"
     
     # Use regex to find $...$ (not preceded or followed by $)
-    md_replaced = re.sub(r'\$(.+?)\$', replace_math, md_text)
+    md_replaced = re.sub(r'\$(.+?)\$', replace_inline_math, md_text)
+    # Use regex to find $$ \n ... \n $$ (multi-line math blocks)
+    md_replaced = re.sub(r'\$\$\s*\n(.+?)\n\s*\$\$', replace_block_math, md_replaced, flags=re.DOTALL)
 
     # 2. Split by newlines (supporting \n or \r\n)
     lines = re.split(r'\r?\n', md_replaced)
 
     # 3. Wrap each non-empty line in <p>...</p>
-    wrapped_lines = [f"<p>{line}</p>" for line in lines if line.strip() != ""]
+    if question_text:
+        # If this is a question, we want to keep the line breaks
+        wrapped_lines = [f"<p>{line.strip()}</p>" for line in lines]
+    else:
+        # For answers, we just wrap each line with a gap between the answer label (A-H) and the text
+        wrapped_lines = [f" \(\quad\) {line.strip()}" for line in lines]
 
     # 4. Join all paragraphs into one HTML string
-    html_result = '\n'.join(wrapped_lines)
+    html_result = ''.join(wrapped_lines)
 
     return html_result
 
@@ -81,7 +91,7 @@ for line in md_lines:
 
         # Otherwise its a new question - save the previous question and its answers
         if current_question:
-            current_question['q_html'] = md_to_custom_html(current_question['q_md'])
+            current_question['q_html'] = md_to_custom_html(current_question['q_md'], question_text=True)
             questions_json.append(current_question)
 
             for idx, ans in enumerate(current_answers):
@@ -123,7 +133,7 @@ for line in md_lines:
 
 # Save the last question and its answers
 if current_question:
-    current_question['q_html'] = md_to_custom_html(current_question['q_md'])
+    current_question['q_html'] = md_to_custom_html(current_question['q_md'], question_text=True)
     questions_json.append(current_question)
 
     for idx, ans in enumerate(current_answers):

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styles from '../styles/Exam.module.css'
-
+import MathsHTML from './MathsHTML'
 
 function QuestionViewer({
   question,
@@ -20,21 +20,13 @@ function QuestionViewer({
   isChecked,
   showCorrect
 }) {
-  useEffect(() => {
-    if (window.MathJax) {
-      window.MathJax.typesetPromise()
-        .catch((err) => console.log('MathJax typeset failed:', err))
-    }
-  }, [question]) // re-run when question changes
-
   return (
     <div className={styles.questionBox}>
       <h2 className={styles.title}>Question {currentIndex + 1} of {totalQuestions}</h2>
       {/* Render HTML safely */}
-      <p
-        className={styles.questionText}
-        dangerouslySetInnerHTML={{ __html: question.question_text }}
-      />
+      <p className={styles.questionText}>
+        <MathsHTML content={question.question_text} className={styles.questionParagraphs} />
+      </p>
       <div className={styles.choices}>
         {question.choices.map(choice => {
           const isCorrect = choice.is_correct
@@ -58,7 +50,7 @@ function QuestionViewer({
                 onChange={() => onSelect(choice.id)}
               />{' '}
               {choice.label}.{' '}
-              <span dangerouslySetInnerHTML={{ __html: choice.text }} />
+              <MathsHTML content={choice.text} answer={true} />
             </label>
           )
         })}

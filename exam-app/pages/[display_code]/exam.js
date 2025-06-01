@@ -8,7 +8,6 @@ import styles from '../../styles/Exam.module.css'
 
 import QuestionViewer from '../../components/QuestionViewer'
 import ReviewPane from '../../components/ReviewPane'
-import Timer from '../components/Timer'
 
 export default function ExamSimulator({ questions, exam }) {
   const router = useRouter()
