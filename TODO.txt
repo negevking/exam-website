@@ -1,20 +1,18 @@
 Urgent:
-add images to question viewer
-format text output in html to display maths equations
-add scraping and upload of correct answers
-automate scraping pipeline for multiple papers
+add sign in and user accounts
+
 
 Medium:
 Clean up inconsistencies in answer formatting - ie some are in math mode, some are not in the same question
-Update styling of question viewer to handle longer questions, at least for pc and mobile
+Mobile styling - make sure it looks good on mobile devices
 add a way to save questions to favourites
 add a way to flag errors in questions
-add unattempted questions to review mode with yellow text
 
 Longer term:
-add sign in and user accounts
 add T&Cs and privacy policy
 add worked solutions
 add contact form/tutoring services
 add logo
 buy domain and hosting
+add scraping and upload of correct answers
+automate scraping pipeline for multiple papers

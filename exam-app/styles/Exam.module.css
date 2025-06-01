@@ -1,16 +1,20 @@
 .container {
-  max-width: 600px;
-  margin: 2rem auto;
+  /* max-width: 600px; */
+  /* margin: 2rem auto; */
+  height: 80vh;
   background: var(--color5);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(107, 144, 128, 0.08);
+  box-sizing: border-box;
   padding: 2rem;
+  display: flex; /* NEW */
+  flex-direction: column; /* Stack children vertically */
 }
 
 .title {
   font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   color: var(--color1);
 }
 
@@ -18,22 +22,77 @@
   background: var(--color3);
   border-radius: 8px;
   padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.questionContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.questionTextDiagramContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap; /* allows stacking on narrow screens */
 }
 
 .questionText {
   font-size: 1rem;
   margin-bottom: 1rem;
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.diagramBox {
+  flex: 1 1 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 1rem;
+  font-size: 0.9rem;
+  background-color: var(--color3);
 }
 
 .questionParagraphs p {
   margin-bottom: 0.5em; /* small bottom margin */
 }
 
+.answerWorkedsolutionsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap; /* allows stacking on narrow screens */
+}
+
 .choices {
+  flex: 1 1 50%;
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
-  margin-bottom: 1rem;
+}
+
+.workedSolution {
+  flex: 1 1 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 1rem;
+  font-size: 0.9rem;
+  background-color: var(--color3);
 }
 
 .choiceLabel {
@@ -44,7 +103,7 @@
 .actions {
   display: flex;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-top: auto;
 }
 
 .checkBtn, .nextBtn {
@@ -67,8 +126,19 @@
   color: var(--color1);
 }
 
+/* for answers in the question viewer we need to define in span, in review pane we define in situ */
 .correct span {
   color: green;
+  font-weight: bold;
+}
+
+.correct  {
+  color: green;
+  font-weight: bold;
+}
+
+.unattempted {
+  color: #e7ad00;
   font-weight: bold;
 }
 
@@ -87,16 +157,22 @@
 .reviewContainer {
   display: flex;
   gap: 2rem;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
+  /* max-height: 90%; */
+  height: 100%;
 }
 
 .reviewSidebar {
-  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 21%;
   background: var(--color5);
   border: 2px solid var(--color3);
   padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(107, 144, 128, 0.1);
+  box-sizing: border-box;
 }
 
 .reviewSidebar h2 {
@@ -117,7 +193,12 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex: 1;
+  overflow-y: auto; /* enables vertical scrollbar when content is too tall */
+  padding: 10px;
+  border: 1px solid #ccc;
 }
+
 
 .reviewItem {
   padding: 0.4rem 0.8rem;
@@ -133,5 +214,9 @@
 }
 
 .reviewMain {
-  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* already present – good */
+  height: 100%;
+  width: 80%;
 }

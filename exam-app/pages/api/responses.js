@@ -5,21 +5,13 @@ import { query } from '../../lib/db'
 function evaluateResponses(responses) {
   const correct = responses.filter(r => r.is_correct).length;
 
-  const incorrect_questions = responses
-    .filter(r => !r.is_correct)
-    .map(r => ({
-      question_id: r.question_id,
-      question_number: r.question_number
-    }));
+  const question_responses = responses.map(r => ({
+    question_id: r.question_id,
+    question_number: r.question_number,
+    is_correct: r.is_correct
+  }));
 
-  const correct_questions = responses
-    .filter(r => r.is_correct)
-    .map(r => ({
-      question_id: r.question_id,
-      question_number: r.question_number
-    }));
-
-  return { correct, incorrect_questions, correct_questions };
+  return { correct, question_responses };
 }
 
 export default async function handler(req, res) {
@@ -30,11 +22,19 @@ export default async function handler(req, res) {
     const { session_id, question_id, answer_id } = body
 
     // Get correct status
-    const correct = await query(`
-      SELECT is_correct FROM answers WHERE id = $1
-    `, [answer_id])
-    const is_correct = correct[0]?.is_correct ?? false
+    let is_correct;
 
+    if (answer_id === undefined || answer_id === null) {
+      // If no answer is selected, treat it as unattempted
+      is_correct = null;
+    } else {
+      // Else, look up the answer to determine if it's correct
+      const correct = await query(`
+        SELECT is_correct FROM answers WHERE id = $1
+      `, [answer_id]);
+      is_correct = correct[0]?.is_correct ?? false;
+    }
+    console.log('Saving response:', { session_id, question_id, answer_id, is_correct })
     const result = await query(`
       INSERT INTO responses (session_id, question_id, answer_id, is_correct)
       VALUES ($1, $2, $3, $4)
@@ -55,6 +55,7 @@ export default async function handler(req, res) {
     FROM responses r
     JOIN questions q ON r.question_id = q.id
     WHERE r.session_id = $1
+    ORDER BY q.question_number;
   `;
 
   // practice mode: only the questions attempted in this session are scored
@@ -62,13 +63,14 @@ export default async function handler(req, res) {
     const { session_id } = queryParams
     
     const result = await query(responseQuery, [session_id]);
-    const total = result.length
+    const attempted = result.filter(r => r.is_correct !== null);
+    const total = attempted.length
 
-    const { correct, incorrect_questions, correct_questions } = evaluateResponses(result);
-    return res.status(200).json({ correct, total, incorrect_questions, correct_questions })
+    const { correct, question_responses } = evaluateResponses(result);
+    return res.status(200).json({ correct, total, question_responses });
   }
 
-  // exam mode: questions are scored based on number of questions in the exam, a
+  // exam mode: questions are scored based on number of questions in the exam, 
   if (method === 'GET' && queryParams.session_id && queryParams.exam_id) {
     const session_id = queryParams.session_id;
     const exam_id = queryParams.exam_id;
@@ -83,9 +85,9 @@ export default async function handler(req, res) {
       const countResult = await query(countQuery, [exam_id]);
       
       const total = parseInt(countResult[0].count, 10);
-      const { correct, incorrect_questions, correct_questions } = evaluateResponses(responseResult);
+      const { correct, question_responses } = evaluateResponses(responseResult);
+      return res.status(200).json({ correct, total, question_responses, time_taken });
 
-      return res.status(200).json({ correct, total, incorrect_questions, correct_questions, time_taken });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ error: 'Internal server error' });

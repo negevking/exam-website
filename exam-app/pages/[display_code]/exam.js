@@ -26,6 +26,7 @@ export default function ExamSimulator({ questions, exam }) {
   const [timeLeft, setTimeLeft] = useState(exam.time_limit * 60)
   const timerRef = useRef()
 
+  //timer setup. In practice mode, we track elapsed time, in exam mode we track time left
 useEffect(() => {
   if (isPractice) {
     timerRef.current = setInterval(() => {
@@ -62,8 +63,8 @@ useEffect(() => {
   async function saveResponse() {
     const qid = questions[currentIndex].id
     const aid = responses[qid]
-    if (!aid) return
-
+    //if (!aid) return
+    // we want to store the response even if no answer is selected so we can track unattempted questions
     await fetch('/api/responses', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -137,6 +138,7 @@ useEffect(() => {
           isLast={currentIndex === questions.length - 1}
           showCheck={isPractice}
           showReveal={isPractice}
+          showWorkedSolution={isPractice}
           onCheck={() => setChecked(true)}
           onReveal={() => setShowCorrect(prev => !prev)}
           isChecked={checked}
@@ -175,7 +177,7 @@ export async function getServerSideProps({ params }) {
   const exam = examRows[0]
 
   const q = await query(`
-    SELECT q.id, q.question_html, q.question_number, a.id AS answer_id, a.answer_html, a.display_order, a.is_correct
+    SELECT q.id, q.question_html, q.question_number, q.diagram_url, a.id AS answer_id, a.answer_html, a.display_order, a.is_correct
     FROM questions q
     JOIN answers a ON q.id = a.question_id
     WHERE q.exam_id = $1
@@ -189,6 +191,7 @@ export async function getServerSideProps({ params }) {
         id: row.id,
         question_text: row.question_html, 
         question_number: row.question_number,
+        diagram: row.diagram_url,
         choices: []
       }
     }

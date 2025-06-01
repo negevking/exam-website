@@ -12,7 +12,6 @@ function formatTime(seconds) {
 export default function ReviewPane({
   exam,
   score,
-  //timeTaken,
   questions,
   responses,
   reviewIndex,
@@ -39,8 +38,8 @@ export default function ReviewPane({
   const timeTaken = formatTime(score.time_taken)
 
   const questionList = showIncorrectOnly
-    ? score.incorrect_questions
-    : [...score.correct_questions, ...score.incorrect_questions]
+    ? score.question_responses.filter(q => q.is_correct === false)
+    : score.question_responses
 
   const displayedQuestions = questionList.map(q => {
     const index = questions.findIndex(ques => ques.id === q.question_id)
@@ -50,7 +49,7 @@ export default function ReviewPane({
   return (
     <div className={styles.reviewContainer}>
       <div className={styles.reviewSidebar}>
-        <h2>{exam.subject} {exam.year}</h2>
+        <h2>{exam.subject} {exam.year} {exam.section}</h2>
         <p>Score: {score.correct} / {score.total}</p>
         <p>Time Taken: {timeTaken}</p>
 
@@ -69,7 +68,12 @@ export default function ReviewPane({
           {displayedQuestions.map(q => (
             <div
               key={q.question_id}
-              className={`${styles.reviewItem} ${score.incorrect_questions.find(i => i.question_id === q.question_id) ? styles.incorrect : styles.correct}`}
+              className={`${styles.reviewItem} ${
+                q.is_correct === true
+                ? styles.correct
+                : q.is_correct === false
+                ? styles.incorrect
+                : styles.unattempted}`}
               onClick={() => handleClick(q.index)}
             >
               Question {q.question_number}
@@ -85,13 +89,15 @@ export default function ReviewPane({
           onSelect={handleSelect}
           onNext={() => setReviewIndex(i => Math.min(i + 1, questions.length - 1))}
           onPrevious={() => setReviewIndex(i => Math.max(i - 1, 0))}
-          onSubmit={() => setReviewMode(false)}
+          onSubmit={null}
           currentIndex={reviewIndex}
           totalQuestions={questions.length}
           disablePrevious={reviewIndex === 0}
           isLast={reviewIndex === questions.length - 1}
           showCheck={true}
           showReveal={true}
+          showSubmit={false}
+          showWorkedSolution={true}
           onCheck={() => setChecked(true)}
           onReveal={() => setShowCorrect(prev => !prev)}
           isChecked={checked}
