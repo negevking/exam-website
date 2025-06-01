@@ -2,10 +2,13 @@
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/router'
 import { query } from '../../lib/db'
-import styles from '../../styles/Exam.module.css'
 import { v4 as uuidv4 } from 'uuid'
+
+import styles from '../../styles/Exam.module.css'
+
 import QuestionViewer from '../../components/QuestionViewer'
 import ReviewPane from '../../components/ReviewPane'
+import Timer from '../components/Timer'
 
 export default function ExamSimulator({ questions, exam }) {
   const router = useRouter()
@@ -44,6 +47,7 @@ useEffect(() => {
 
   return () => clearInterval(timerRef.current)
 }, [isPractice])
+
   const currentQuestion = reviewMode
     ? questions[reviewIndex]
     : questions[currentIndex]
@@ -172,7 +176,7 @@ export async function getServerSideProps({ params }) {
   const exam = examRows[0]
 
   const q = await query(`
-    SELECT q.id, q.question_text, q.question_number, a.id AS answer_id, a.answer_text, a.display_order, a.is_correct
+    SELECT q.id, q.question_html, q.question_number, a.id AS answer_id, a.answer_html, a.display_order, a.is_correct
     FROM questions q
     JOIN answers a ON q.id = a.question_id
     WHERE q.exam_id = $1
@@ -184,14 +188,14 @@ export async function getServerSideProps({ params }) {
     if (!grouped[row.id]) {
       grouped[row.id] = {
         id: row.id,
-        question_text: row.question_text,
+        question_text: row.question_html, 
         question_number: row.question_number,
         choices: []
       }
     }
     grouped[row.id].choices.push({
       id: row.answer_id,
-      text: row.answer_text,
+      text: row.answer_html,
       label: String.fromCharCode(65 + row.display_order),
       is_correct: row.is_correct
     })

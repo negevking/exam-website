@@ -1,7 +1,8 @@
-// File: components/QuestionViewer.js
+import React, { useEffect } from 'react'
 import styles from '../styles/Exam.module.css'
 
-export default function QuestionViewer({
+
+function QuestionViewer({
   question,
   selectedAnswer,
   onSelect,
@@ -19,10 +20,21 @@ export default function QuestionViewer({
   isChecked,
   showCorrect
 }) {
+  useEffect(() => {
+    if (window.MathJax) {
+      window.MathJax.typesetPromise()
+        .catch((err) => console.log('MathJax typeset failed:', err))
+    }
+  }, [question]) // re-run when question changes
+
   return (
     <div className={styles.questionBox}>
       <h2 className={styles.title}>Question {currentIndex + 1} of {totalQuestions}</h2>
-      <p className={styles.questionText}>{question.question_text}</p>
+      {/* Render HTML safely */}
+      <p
+        className={styles.questionText}
+        dangerouslySetInnerHTML={{ __html: question.question_text }}
+      />
       <div className={styles.choices}>
         {question.choices.map(choice => {
           const isCorrect = choice.is_correct
@@ -45,7 +57,8 @@ export default function QuestionViewer({
                 checked={isSelected}
                 onChange={() => onSelect(choice.id)}
               />{' '}
-              {choice.label}. {choice.text}
+              {choice.label}.{' '}
+              <span dangerouslySetInnerHTML={{ __html: choice.text }} />
             </label>
           )
         })}
@@ -88,3 +101,5 @@ export default function QuestionViewer({
     </div>
   )
 }
+
+export default React.memo(QuestionViewer)
