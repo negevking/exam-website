@@ -7,6 +7,7 @@ Clean up inconsistencies in answer formatting - ie some are in math mode, some a
 Mobile styling - make sure it looks good on mobile devices
 add a way to save questions to favourites
 add a way to flag errors in questions
+refactor the horizontal blocks of question/diagram and answers/solution to be vertical columns so there isnt space between question text and answers
 
 Longer term:
 add T&Cs and privacy policy
